@@ -9,7 +9,7 @@ func TestSearchPattern(t *testing.T) {
 
 	res, err := Search(s, p)
 	if err != nil {
-		t.Fatal("Search returned error")
+		t.Fatalf("Search returned error %v", err)
 	}
 	if res != expect {
 		t.Fatalf("Returned index should be %d", expect)
