@@ -9,6 +9,10 @@ import (
 func TestLeastM_1(t *testing.T) {
 	fmt.Println("****** Starting test", "TestLeastM1", "******")
 
+	for i := 1; i < 5; i++ {
+		k := maxKForNaturalT(i)
+		fmt.Printf("max k = %d, for t = %d\n", k, i)
+	}
 	checkLeastM(2, 3, 6, t)
 	checkLeastM(9, 20, 30, t)
 }
@@ -45,6 +49,8 @@ func checkLeastM(a, b, expect int, t *testing.T) {
 func checkBackwards(k int) bool {
 	t := computeT(k)
 	fmt.Printf("t = %+v\n", t)
+	four := math.Pow(4, t)
+	fmt.Printf("four = %+v\n", four)
 
 	computedK := math.Pow(4, t) - math.Pow(2, t)
 	diff := computedK - float64(k)

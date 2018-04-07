@@ -5,6 +5,7 @@ import (
 	"math"
 )
 
+// FIXME: 4^t and 2^t have to be integers !!!
 func FindLeastM(a, b int) int {
 
 	lim := float64(a) / float64(b)
@@ -46,12 +47,4 @@ func computeT(k int) float64 {
 	d := math.Sqrt(1 + 4*float64(k))
 	t := math.Log2(1+d) - 1
 	return t
-}
-
-func isTNatural(t float64) bool {
-	tN := int(t)
-	if float64(tN)-t < 10e-6 {
-		return true
-	}
-	return false
 }
