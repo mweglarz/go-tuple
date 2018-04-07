@@ -6,13 +6,18 @@ import (
 )
 
 const (
-	hashMultiplier float64 = 69069
+	// hashMultiplier float64 = 69069
+	hashMultiplier float64 = 69
 )
 
 func Search(str, pattern string) (indx int, err error) {
+	fmt.Printf("str = %+v\n", str)
+	fmt.Printf("pattern = %+v\n", pattern)
 
-	patternArray := wordToIntArray(pattern)
-	strArray := wordToIntArray(str)
+	patternArray := ([]int32)(pattern)
+	strArray := ([]int32)(str)
+	// fmt.Printf("patternArray = %+v\n", patternArray)
+	// fmt.Printf("strArray = %+v\n", strArray)
 
 	if len(strArray) < len(patternArray) {
 		err = fmt.Errorf("Pattern longer than text")
@@ -24,20 +29,37 @@ func Search(str, pattern string) (indx int, err error) {
 		firstChars          = strArray[:endIndx]
 		firstHash           = hash(firstChars)
 	)
+	fmt.Printf("patternHash = %+v\n", patternHash)
+	fmt.Printf("firstChars = %+v, %v\n", firstChars, string(firstChars))
+	fmt.Printf("firstHash = %+v\n", firstHash)
 
 	if patternHash == firstHash && compare(patternArray, firstChars) {
 		return
 	}
 	var prevHash = firstHash
 
-	for idx := 1; idx <= len(strArray)-len(patternArray); idx++ {
+	for idx := 0; idx < len(strArray)-len(patternArray); idx++ {
+		fmt.Println()
 		endIndx = idx + len(patternArray)
 		window := strArray[idx:endIndx]
-		windowHash := nextHash(prevHash, strArray[idx-1], strArray[idx], len(patternArray)-1)
+		fmt.Printf("window = %+v, %v\n", window, string(window))
+		fmt.Printf("prevHash = %+v\n", prevHash)
+		fmt.Printf("idx = %+v\n", idx)
+		fmt.Printf("strArray[idx] = %+v\n", strArray[idx])
+		fmt.Printf("strArray[endIndx] = %+v\n", strArray[endIndx])
 
-		if windowHash == patternHash && compare(patternArray, window) {
-			indx = idx
-			return
+		windowHash := nextHash(prevHash, strArray[idx], strArray[endIndx], len(patternArray)-1)
+		fmt.Printf("windowHash = %+v\n", windowHash)
+
+		if windowHash == patternHash {
+			fmt.Println("window hash match pattern hash")
+			fmt.Printf("patternArray = %+v\n", patternArray)
+			fmt.Printf("window = %+v\n", window)
+			if compare(patternArray, window) {
+				fmt.Println("window match pattern, returning index", idx)
+				indx = idx
+				return
+			}
 		}
 		prevHash = windowHash
 	}
@@ -58,13 +80,6 @@ func hash(ar []int32) (total float64) {
 func nextHash(prevHash float64, dropped, added int32, patternSize int) float64 {
 	oldHash := prevHash - float64(dropped)*math.Pow(float64(hashMultiplier), float64(patternSize))
 	return hashMultiplier*oldHash + float64(added)
-}
-
-func wordToIntArray(str string) (ar []int32) {
-	for _, v := range str {
-		ar = append(ar, v)
-	}
-	return
 }
 
 func compare(ar1 []int32, ar2 []int32) bool {
