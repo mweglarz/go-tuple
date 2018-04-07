@@ -10,18 +10,12 @@ const (
 	hashMultiplier float64 = 69
 )
 
-func Search(str, pattern string) (indx int, err error) {
-	fmt.Printf("str = %+v\n", str)
-	fmt.Printf("pattern = %+v\n", pattern)
-
+func Search(str, pattern string) (int, error) {
 	patternArray := ([]int32)(pattern)
 	strArray := ([]int32)(str)
-	// fmt.Printf("patternArray = %+v\n", patternArray)
-	// fmt.Printf("strArray = %+v\n", strArray)
 
 	if len(strArray) < len(patternArray) {
-		err = fmt.Errorf("Pattern longer than text")
-		return
+		return 0, fmt.Errorf("Pattern longer than text")
 	}
 	var (
 		patternHash float64 = hash(patternArray)
@@ -29,43 +23,25 @@ func Search(str, pattern string) (indx int, err error) {
 		firstChars          = strArray[:endIndx]
 		firstHash           = hash(firstChars)
 	)
-	fmt.Printf("patternHash = %+v\n", patternHash)
-	fmt.Printf("firstChars = %+v, %v\n", firstChars, string(firstChars))
-	fmt.Printf("firstHash = %+v\n", firstHash)
 
 	if patternHash == firstHash && compare(patternArray, firstChars) {
-		return
+		return 0, nil
 	}
 	var prevHash = firstHash
 
-	for idx := 0; idx < len(strArray)-len(patternArray); idx++ {
+	for idx := 1; idx <= len(strArray)-len(patternArray); idx++ {
 		fmt.Println()
 		endIndx = idx + len(patternArray)
 		window := strArray[idx:endIndx]
-		fmt.Printf("window = %+v, %v\n", window, string(window))
-		fmt.Printf("prevHash = %+v\n", prevHash)
-		fmt.Printf("idx = %+v\n", idx)
-		fmt.Printf("strArray[idx] = %+v\n", strArray[idx])
-		fmt.Printf("strArray[endIndx] = %+v\n", strArray[endIndx])
+		windowHash := nextHash(prevHash, strArray[idx-1], strArray[endIndx-1], len(patternArray)-1)
 
-		windowHash := nextHash(prevHash, strArray[idx], strArray[endIndx], len(patternArray)-1)
-		fmt.Printf("windowHash = %+v\n", windowHash)
-
-		if windowHash == patternHash {
-			fmt.Println("window hash match pattern hash")
-			fmt.Printf("patternArray = %+v\n", patternArray)
-			fmt.Printf("window = %+v\n", window)
-			if compare(patternArray, window) {
-				fmt.Println("window match pattern, returning index", idx)
-				indx = idx
-				return
-			}
+		if windowHash == patternHash && compare(patternArray, window) {
+			return idx, nil
 		}
 		prevHash = windowHash
 	}
 
-	err = fmt.Errorf("Not found")
-	return
+	return 0, fmt.Errorf("Not found")
 }
 
 func hash(ar []int32) (total float64) {

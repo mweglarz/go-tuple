@@ -7,11 +7,9 @@ import (
 
 func TestSearchPattern(t *testing.T) {
 	fmt.Println("*** Starting TestSearchPattern ***")
-	// s := "The big dog jumped over the fox"
-	s := "ajumpe"
+	s := "The big dog jumped over the fox"
 	p := "ump"
-	// expect := 13
-	expect := 2
+	expect := 13
 
 	res, err := Search(s, p)
 	if err != nil {
@@ -38,8 +36,6 @@ func TestHash_And_NextHash(t *testing.T) {
 	s1Array := ([]int32)(s1)
 	hash1 := hash(s1Array[:3])
 	nHash := nextHash(hash1, s1Array[0], s1Array[3], 2)
-	fmt.Printf("hash1 = %+v\n", hash1)
-	fmt.Printf("nHash = %+v\n", nHash)
 
 	if nHash != hash1 {
 		t.Fatalf("hash1 = %f\ndifferent from\nnext hash =%f\n", hash1, nHash)
@@ -53,8 +49,6 @@ func TestHash_And_NextHash2(t *testing.T) {
 	hash1 := hash(s1Array[:3])
 	nHash := nextHash(hash1, s1Array[0], s1Array[3], 2)
 	hash2 := hash(s1Array[1:4])
-	fmt.Printf("hash1 = %+v\n", hash1)
-	fmt.Printf("nHash = %+v\n", nHash)
 
 	if nHash != hash2 {
 		t.Fatalf("hash2 = %f\ndifferent from\nnext hash =%f\n", hash2, nHash)
