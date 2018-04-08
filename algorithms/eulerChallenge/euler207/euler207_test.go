@@ -60,3 +60,17 @@ func checkBackwards(k int) bool {
 	}
 	return false
 }
+
+func TestFourAndTwo_Integers(t *testing.T) {
+	fmt.Println("****** Starting test", "TestFourAndTwo_Integers", "******")
+
+	p6 := P(6)
+	if !compare(p6, 0.5) {
+		t.Fatalf("P(6) should be 0.5, result = %f", p6)
+	}
+
+	p5 := P(5)
+	if !compare(p5, 1) {
+		t.Fatalf("P(5) should be 1.0, result = %f", p5)
+	}
+}
