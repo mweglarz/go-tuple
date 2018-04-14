@@ -1,9 +1,31 @@
-package euler207
+package main
 
 import (
 	"fmt"
 	"math"
+    "bufio"
+	"os"
+	"strconv"
+	"strings"
 )
+
+func main() {
+    
+    reader := bufio.NewReader(os.Stdin)
+	numStr, _ := reader.ReadString('\n')
+	numStr = strings.TrimSpace(numStr)
+	num, _ := strconv.Atoi(numStr)
+    
+    for i:=0; i<num; i++ {
+        lineString, _ := reader.ReadString('\n')
+        lineString = strings.TrimSpace(lineString)
+        numbersStr := strings.Split(lineString, " ")
+        a, _ := strconv.Atoi(numbersStr[0])
+        b, _ := strconv.Atoi(numbersStr[1])
+        m := FindLeastM(a,b)
+        fmt.Println(m)
+    }
+}
 
 func FindLeastM(a, b int) int {
 	var result float64 = 1.0
