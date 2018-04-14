@@ -9,6 +9,16 @@ import (
 	"strings"
 )
 
+type Result struct {
+	k     int
+	value float64
+}
+
+var lastValidK int = 0
+var lastValidK2 int = 0
+var switcher bool = false
+var perfectResults = make([]Result, 0)
+
 func main() {
     
     reader := bufio.NewReader(os.Stdin)
@@ -28,9 +38,15 @@ func main() {
 }
 
 func FindLeastM(a, b int) int {
+	var tresh float64 = frac(a, b)
 	var result float64 = 1.0
-	i := 2
-	for ; result > frac(a, b); i++ {
+	var i int = 2
+	for indx, res := range perfectResults {
+		if res.value < tresh {
+			i = perfectResults[indx-1].k
+		}
+	}
+	for ; result > tresh; i++ {
 		result = P(i)
 	}
 	return i - 1
@@ -43,7 +59,21 @@ func P(m int) float64 {
 		t := computeT(k)
 		if _, err := computTwo(t); err == nil {
 			all += 1
+			switcher = !switcher
+			if switcher {
+				lastValidK = k
+			} else {
+				lastValidK2 = k
+			}
 			if _, ok := isInteger(t); ok {
+				var result Result
+				if switcher {
+					result = Result{k: lastValidK2, value: (perfect / (all - 1))}
+
+				} else {
+					result = Result{k: lastValidK, value: (perfect / (all - 1))}
+				}
+				perfectResults = append(perfectResults, result)
 				perfect += 1
 			}
 		}
