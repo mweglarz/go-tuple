@@ -1,31 +1,45 @@
 package stack
 
-import (
-	"errors"
-)
-
 type Element interface{}
 
-type stack struct {
+type EmptyStackError struct {
+}
+
+func (e EmptyStackError) Error() string {
+	return "stack is empty"
+}
+
+type Stack struct {
 	elements []Element
 }
 
-func New(initialValues ...Element) *stack {
-	return &stack{initialValues}
+func New(initialValues ...Element) *Stack {
+	return &Stack{initialValues}
 }
 
-func (st *stack) Push(elem Element) {
+func (st *Stack) Push(elem Element) {
 	newStack := make([]Element, 0, len(st.elements)+1)
 	newStack = append(newStack, elem)
 	st.elements = append(newStack, st.elements...)
 }
 
-func (st *stack) Pop() (result Element, err error) {
-	if len(st.elements) < 1 {
-		err = errors.New("stack is empty")
-		return
+func (st *Stack) Pop() (result Element, err error) {
+	if st.IsEmpty() {
+		err = EmptyStackError{}
 	}
 	result = st.elements[0]
 	st.elements = append(st.elements[:0], st.elements[1:]...)
 	return
+}
+
+func (st *Stack) TopElement() (*Element, error) {
+	if st.IsEmpty() {
+		return nil, EmptyStackError{}
+	}
+
+	return &st.elements[0], nil
+}
+
+func (st *Stack) IsEmpty() bool {
+	return len(st.elements) < 1
 }
