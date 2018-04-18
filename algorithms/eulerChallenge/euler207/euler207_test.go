@@ -2,6 +2,8 @@ package euler207
 
 import (
 	"testing"
+
+	"tuple-mw.com/algorithms/eulerChallenge/euler207/find"
 )
 
 // func TestLeastM_1(t *testing.T) {
@@ -15,7 +17,29 @@ import (
 
 func TestLeastMultiM(t *testing.T) {
 	// _ = FindMulti([]int{2, 9, 1, 1}, []int{3, 20, 10, 20})
+	//_ = FindMulti([]int{1, 1}, []int{10, 10})
 	_ = FindMulti([]int{1, 1, 1, 1, 1, 1, 1, 1, 1, 1}, []int{10, 10, 10, 10, 10, 10, 10, 10, 10, 10})
+	// _ = FindMulti([]int{1, 1, 1, 1, 1, 1, 1, 1, 1, 1}, []int{2, 2, 2, 2, 2, 2, 2, 2, 2, 2})
+}
+
+func TestFindNearestLowerSolution(t *testing.T) {
+	ar := []int{1, 6, 12, 25}
+	k := 7
+
+	indx, _ := find.FindNearestLowerSolution(k, ar, 0, len(ar))
+	if ar[indx] != 6 {
+		t.Fatalf("incorrect nearest solution, ar[indx] = %d", ar[indx])
+	}
+}
+
+func TestFindNearestLargerSolution_SameValue(t *testing.T) {
+	ar := []int{1, 6, 12, 25}
+	k := 6
+
+	indx, _ := find.FindNearestLowerSolution(k, ar, 0, len(ar))
+	if ar[indx] != 6 {
+		t.Fatalf("incorrect nearest solution, ar[indx] = %d", ar[indx])
+	}
 }
 
 func checkLeastM(a, b, expect int, t *testing.T) {

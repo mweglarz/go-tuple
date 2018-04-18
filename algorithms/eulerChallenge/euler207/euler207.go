@@ -3,17 +3,12 @@ package euler207
 import (
 	"fmt"
 	"math"
+
+	"tuple-mw.com/algorithms/eulerChallenge/euler207/find"
 )
 
-type Result struct {
-	k     int
-	value float64
-}
-
-var lastValidK int = 0
-var lastValidK2 int = 0
-var switcher bool = false
-var perfectResults = make([]Result, 0)
+var results = make(map[int]float64)
+var kWithResult = make([]int, 0)
 
 func FindMulti(as []int, bs []int) []int {
 	var result []int
@@ -27,13 +22,7 @@ func FindLeastM(a, b int) int {
 	var tresh float64 = frac(a, b)
 	var result float64 = 1.0
 	var i int = 2
-	for indx, res := range perfectResults {
-		fmt.Printf("res = %+v\n", res)
 
-		if res.value < tresh {
-			i = perfectResults[indx-1].k
-		}
-	}
 	for ; result > tresh; i++ {
 		result = P(i)
 	}
@@ -41,28 +30,27 @@ func FindLeastM(a, b int) int {
 }
 
 func P(m int) float64 {
+
+	if len(kWithResult) > 0 && kWithResult[len(kWithResult)-1] >= m {
+
+		indx, _ := find.FindNearestLowerSolution(m, kWithResult, 0, len(kWithResult))
+		k := kWithResult[indx]
+		value := results[k]
+		return value
+	}
+
 	var all float64 = 0
 	var perfect float64 = 0
 	for k := 1; k <= m; k++ {
 		t := computeT(k)
 		if _, err := computTwo(t); err == nil {
+			appendToKsIfNeeded(k)
 			all += 1
-			switcher = !switcher
-			if switcher {
-				lastValidK = k
-			} else {
-				lastValidK2 = k
-			}
-			if _, ok := isInteger(t); ok {
-				var result Result
-				if switcher {
-					result = Result{k: lastValidK2, value: (perfect / (all - 1))}
+			results[k] = perfect / all
 
-				} else {
-					result = Result{k: lastValidK, value: (perfect / (all - 1))}
-				}
-				perfectResults = append(perfectResults, result)
+			if _, ok := isInteger(t); ok {
 				perfect += 1
+				results[k] = perfect / all
 			}
 		}
 	}
@@ -98,4 +86,11 @@ func isInteger(num float64) (int, bool) {
 
 func compare(a, b float64) bool {
 	return math.Abs(a-b) < 10e-6
+}
+
+func appendToKsIfNeeded(k int) {
+	_, err := find.Find(k, kWithResult, 0, len(kWithResult))
+	if err != nil {
+		kWithResult = append(kWithResult, k)
+	}
 }
