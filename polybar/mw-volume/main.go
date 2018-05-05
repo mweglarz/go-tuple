@@ -4,12 +4,12 @@ import (
 	"flag"
 	"fmt"
 
-	info "tuple-mw.com/polybar/volume/sinkInfo"
-	volume "tuple-mw.com/polybar/volume/sinkVolume"
+	info "tuple-mw.com/polybar/mw-volume/sinkInfo"
+	volume "tuple-mw.com/polybar/mw-volume/sinkVolume"
 )
 
 func main() {
-	step := flag.Uint("step", 6, "volume up/down step")
+	step := flag.Uint("step", 5, "volume up/down step")
 	volUp := flag.Bool("up", false, "volume up")
 	volDown := flag.Bool("down", false, "volume down")
 	flag.Parse()
