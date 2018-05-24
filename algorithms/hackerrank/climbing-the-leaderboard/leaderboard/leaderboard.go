@@ -6,11 +6,6 @@ import (
 	search "tuple-mw.com/algorithms/binarySearch"
 )
 
-type Score struct {
-	Value        int
-	PlayersCount int
-}
-
 func GetRankProgress(playersCount int, playersScore []int, gameCount int, gameScores []int) []int {
 
 	// TODO: create sorted set from playersscore, set index determine ranking
@@ -27,35 +22,39 @@ func GetRankProgress(playersCount int, playersScore []int, gameCount int, gameSc
 }
 
 func getRank(scoreSet []int, gameScore int) int {
+	fmt.Println("scoreSet", scoreSet, "gameScore", gameScore)
 	index, nearestIndex := search.SearchDecreasing(scoreSet, gameScore)
-	fmt.Printf("getRank, index = %+v\n", index)
+	fmt.Printf("getRank, index = %d, nearestIndex = %d\n", index, nearestIndex)
+
+	var result int
 
 	if index != -1 {
-		return index
+		result = index
 
 	} else if nearestIndex == -1 {
-		return 1
+		result = 0
 
 	} else {
 		nearestValue := scoreSet[nearestIndex]
 		if nearestValue > gameScore {
-			return nearestIndex + 1
+			result = nearestIndex + 1
+
+		} else {
+			result = nearestIndex
 		}
-		return nearestIndex
 	}
+
+	return result + 1
 }
 
 func prepareData(playersScore []int) ([]int, []int) {
 	var scoreSet []int
 	var scoreCount []int
 
-	fmt.Println("prepareData BEGIN", playersScore)
-
 	for _, score := range playersScore {
 		valIndex, _ := search.SearchDecreasing(scoreSet, score)
 
 		if valIndex == -1 {
-			fmt.Printf("%d not found, inserting at index %d\n", score, len(scoreSet))
 			scoreSet = append(scoreSet, score)
 			// scoreCount = append(scoreCount, 1)
 
@@ -63,11 +62,6 @@ func prepareData(playersScore []int) ([]int, []int) {
 		// 	fmt.Printf("%d found at index %d incrementing %d\n", score, valIndex, scoreCount[valIndex])
 		// 	// scoreCount[valIndex] += 1
 		// }
-
-		fmt.Println("for continue, score handled", score)
 	}
-
-	fmt.Println("prepareData END")
-
 	return scoreSet, scoreCount
 }

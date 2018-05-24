@@ -1,0 +1,147 @@
+package main
+
+import (
+    "bufio"
+    "fmt"
+    "io"
+    "os"
+    "strconv"
+    "strings"
+)
+
+func SearchDecreasing(array []int32, value int32) (int, int) {
+
+	var lowerBound, upperBound = 0, len(array)
+	var midIndex int = -1
+	for lowerBound < upperBound {
+		midIndex = lowerBound + (upperBound-lowerBound)/2
+
+		if array[midIndex] == value {
+			return midIndex, -1
+
+		} else if array[midIndex] > value {
+			lowerBound = midIndex + 1
+
+		} else {
+			upperBound = midIndex
+		}
+	}
+
+	return -1, midIndex
+}
+
+func getRank(scoreSet []int32, gameScore int32) int32 {
+	index, nearestIndex := SearchDecreasing(scoreSet, gameScore)
+	var result int
+
+	if index != -1 {
+		result = index
+
+	} else if nearestIndex == -1 {
+		result = 0
+
+	} else {
+		nearestValue := scoreSet[nearestIndex]
+		if nearestValue > gameScore {
+			result = nearestIndex + 1
+
+		} else {
+			result = nearestIndex
+		}
+	}
+
+    return int32(result) + 1
+}
+
+func prepareData(playersScore []int32) []int32 {
+	var scoreSet []int32
+
+	for _, score := range playersScore {
+		valIndex, _ := SearchDecreasing(scoreSet, score)
+
+		if valIndex == -1 {
+			scoreSet = append(scoreSet, score)
+		}
+	}
+	return scoreSet
+}
+
+// Complete the climbingLeaderboard function below.
+func climbingLeaderboard(scores []int32, alice []int32) []int32 {
+    
+	var ranks []int32
+	scoreSet := prepareData(scores)
+	for _, gameScore := range alice {
+		rank := getRank(scoreSet, gameScore)
+		ranks = append(ranks, rank)
+	}
+	return ranks
+}
+
+func main() {
+    reader := bufio.NewReaderSize(os.Stdin, 1024 * 1024)
+
+    stdout, err := os.Create(os.Getenv("OUTPUT_PATH"))
+    checkError(err)
+
+    defer stdout.Close()
+
+    writer := bufio.NewWriterSize(stdout, 1024 * 1024)
+
+    scoresCount, err := strconv.ParseInt(readLine(reader), 10, 64)
+    checkError(err)
+
+    scoresTemp := strings.Split(readLine(reader), " ")
+
+    var scores []int32
+
+    for i := 0; i < int(scoresCount); i++ {
+        scoresItemTemp, err := strconv.ParseInt(scoresTemp[i], 10, 64)
+        checkError(err)
+        scoresItem := int32(scoresItemTemp)
+        scores = append(scores, scoresItem)
+    }
+
+    aliceCount, err := strconv.ParseInt(readLine(reader), 10, 64)
+    checkError(err)
+
+    aliceTemp := strings.Split(readLine(reader), " ")
+
+    var alice []int32
+
+    for i := 0; i < int(aliceCount); i++ {
+        aliceItemTemp, err := strconv.ParseInt(aliceTemp[i], 10, 64)
+        checkError(err)
+        aliceItem := int32(aliceItemTemp)
+        alice = append(alice, aliceItem)
+    }
+
+    result := climbingLeaderboard(scores, alice)
+
+    for i, resultItem := range result {
+        fmt.Fprintf(writer, "%d", resultItem)
+
+        if i != len(result) - 1 {
+            fmt.Fprintf(writer, "\n")
+        }
+    }
+
+    fmt.Fprintf(writer, "\n")
+
+    writer.Flush()
+}
+
+func readLine(reader *bufio.Reader) string {
+    str, _, err := reader.ReadLine()
+    if err == io.EOF {
+        return ""
+    }
+
+    return strings.TrimRight(string(str), "\r\n")
+}
+
+func checkError(err error) {
+    if err != nil {
+        panic(err)
+    }
+}

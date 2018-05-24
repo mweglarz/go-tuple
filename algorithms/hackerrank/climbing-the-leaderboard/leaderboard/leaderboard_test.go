@@ -1,10 +1,12 @@
 package leaderboard
 
-import "testing"
+import (
+	"fmt"
+	"testing"
+)
 
 var input []int = []int{100, 100, 50, 40, 40, 20, 10}
 var expectScore []int = []int{100, 50, 40, 20, 10}
-var expectCount []int = []int{2, 1, 2, 1, 1}
 
 func TestRankForSampleInput(t *testing.T) {
 
@@ -17,6 +19,7 @@ func TestRankForSampleInput(t *testing.T) {
 	)
 
 	result := GetRankProgress(playersCount, playersScore, gameCount, gameScores)
+	fmt.Println("rankForSampleInput result", result)
 
 	for i := 0; i < gameCount; i++ {
 		if result[i] != expect[i] {
@@ -27,14 +30,14 @@ func TestRankForSampleInput(t *testing.T) {
 
 func TestPrepareData(t *testing.T) {
 
-	outScore, outCount := prepareData(input)
+	outScore, _ := prepareData(input)
 
-	if len(expectScore) != len(outScore) || len(expectCount) != len(outCount) {
-		t.Fatalf("Array sizes don't match, expectScore %d, outScore %d, expectCount %d, outCount %d", len(expectScore), len(outScore), len(expectCount), len(outCount))
+	if len(expectScore) != len(outScore) {
+		t.Fatalf("Array sizes don't match, expectScore %d, outScore %d", len(expectScore), len(outScore))
 	}
 
 	for i := 0; i < len(expectScore); i++ {
-		if expectScore[i] != outScore[i] || expectCount[i] != outCount[i] {
+		if expectScore[i] != outScore[i] {
 			t.Fatal("Expect and out don't match")
 		}
 	}
@@ -44,9 +47,10 @@ func TestGetRank(t *testing.T) {
 	gameScore := 50
 	expectPosition := 2
 
-	calcPosition := getRank(input, gameScore) + 1 // array counts from 0
+	scoreSet, _ := prepareData(input)
+	calcPosition := getRank(scoreSet, gameScore)
 	if calcPosition != expectPosition {
-		t.Fatalf("expected position %d differ from calculated position %d", expectPosition, calcPosition)
+		t.Fatalf("expected position %d differ from calculated position %d, score %d, scoreSet %v", expectPosition, calcPosition, gameScore, scoreSet)
 	}
 }
 
@@ -54,7 +58,8 @@ func TestGetRank2(t *testing.T) {
 	gameScore := 60
 	expectPosition := 2
 
-	calcPosition := getRank(input, gameScore) + 1 // array counts from 0
+	scoreSet, _ := prepareData(input)
+	calcPosition := getRank(scoreSet, gameScore)
 	if calcPosition != expectPosition {
 		t.Fatalf("expected position %d differ from calculated position %d", expectPosition, calcPosition)
 	}
@@ -64,7 +69,8 @@ func TestGetRank3(t *testing.T) {
 	gameScore := 5
 	expectPosition := 6
 
-	calcPosition := getRank(input, gameScore) + 1 // array counts from 0
+	scoreSet, _ := prepareData(input)
+	calcPosition := getRank(scoreSet, gameScore)
 	if calcPosition != expectPosition {
 		t.Fatalf("expected position %d differ from calculated position %d", expectPosition, calcPosition)
 	}
