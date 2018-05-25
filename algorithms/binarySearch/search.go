@@ -2,7 +2,7 @@ package binarySearch
 
 // Return index of element -1 if not found,
 // second returned value is last midIndex or -1
-func SearchDecreasing(array []int, value int) (int, int) {
+func SearchDecreasing(array []int32, value int32) (int, int) {
 
 	var lowerBound, upperBound = 0, len(array)
 	var midIndex int = -1
