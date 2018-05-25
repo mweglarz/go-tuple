@@ -3,7 +3,7 @@ package main
 import (
     "bufio"
     "fmt"
-    "io"
+    // "io"
     "os"
     "strconv"
     "strings"
@@ -132,12 +132,10 @@ func main() {
 }
 
 func readLine(reader *bufio.Reader) string {
-    str, _, err := reader.ReadLine()
-    if err == io.EOF {
-        return ""
-    }
+    str, _ := reader.ReadLine()
+    return strings.TrimSpace(str)
 
-    return strings.TrimRight(string(str), "\r\n")
+    // return strings.TrimRight(string(str), "\r\n")
 }
 
 func checkError(err error) {

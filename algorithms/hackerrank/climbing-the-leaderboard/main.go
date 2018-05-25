@@ -27,20 +27,21 @@ func main() {
 
 	scoresCount, err := strconv.ParseInt(readLine(reader), 10, 64)
 	checkError(err)
-	fmt.Println("flag 3")
+	fmt.Println("flag 3", scoresCount)
 
-	scoresTemp := strings.Split(readLine(reader), " ")
+	line := readLine(reader)
+	scoresTemp := strings.Split(line, " ")
 	fmt.Println("scoresTemp len = ", len(scoresTemp))
 	fmt.Println("scoresCount = ", scoresCount)
 	if int64(len(scoresTemp)) != scoresCount {
-		panic("scoresTemp doesn't match scoresCount")
+		fmt.Println("scoresTemp doesn't match scoresCount")
 	}
 
 	var scores []int32
 
 	fmt.Println("flag 4")
-	for i := 0; i < int(scoresCount); i++ {
-		fmt.Println("flag 5", i)
+	for i := 0; i < len(scoresTemp); i++ {
+		// fmt.Println("flag 5", i)
 		scoresItemTemp, err := strconv.ParseInt(scoresTemp[i], 10, 64)
 		checkError(err)
 		scoresItem := int32(scoresItemTemp)
@@ -50,9 +51,10 @@ func main() {
 	fmt.Println("flag 6")
 	aliceCount, err := strconv.ParseInt(readLine(reader), 10, 64)
 	checkError(err)
-	fmt.Println("flag 7")
+	fmt.Println("flag 7, aliceCOunt", aliceCount)
 
 	aliceTemp := strings.Split(readLine(reader), " ")
+	fmt.Println("aliceTemp len ", len(aliceTemp))
 
 	var alice []int32
 
@@ -82,16 +84,21 @@ func main() {
 }
 
 func readLine(reader *bufio.Reader) string {
-	str, _, err := reader.ReadLine()
+	str, err := reader.ReadString('\n')
+	// str, _, err := reader.ReadLine()
 	if err == io.EOF {
-		return ""
+		return str
 	}
-
-	return strings.TrimRight(string(str), "\r\n")
+	fmt.Println("after readline")
+	if err != nil {
+		fmt.Println("error while reading line ", err)
+	}
+	return strings.TrimSpace(string(str))
+	// return strings.TrimRight(string(str), "\r\n")
 }
 
 func checkError(err error) {
-	if err != nil {
-		panic(err)
-	}
+	// if err != nil {
+	// 	panic(err)
+	// }
 }
