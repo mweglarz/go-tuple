@@ -8,9 +8,6 @@ import (
 
 func ClimbingLeaderboard(playersScore []int32, gameScores []int32) []int32 {
 
-	// TODO: create sorted set from playersscore, set index determine ranking
-	// TODO: set have to keep track of number of players with specific score so
-	// we can delete score when it's only Alice and she goes up
 	var ranks []int32
 	fmt.Println("climbing before prepare data")
 	scoreSet := prepareData(playersScore)
