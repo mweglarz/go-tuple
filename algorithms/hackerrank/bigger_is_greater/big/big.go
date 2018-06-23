@@ -1,13 +1,8 @@
 package big
 
 import "strings"
-import "fmt"
 
 func findMin(runes []rune, start int, validation func(rune) bool) int {
-	fmt.Println("findMin invoked")
-	fmt.Printf("runes = %+v\n", runes)
-	fmt.Printf("start = %+v\n", start)
-
 	minIndex := -1
 	min := rune(255)
 	for i := start; i < len(runes); i++ {
@@ -16,12 +11,10 @@ func findMin(runes []rune, start int, validation func(rune) bool) int {
 			minIndex = i
 		}
 	}
-	fmt.Printf("minIndex = %+v\n", minIndex)
 	return minIndex
 }
 
 func BiggerIsGreater(word string) string {
-	fmt.Println("invoking bigger is greater, runes", []rune(word))
 	runes := []rune(strings.ToLower(word))
 	swap := func(i, j int) {
 		runes[i], runes[j] = runes[j], runes[i]
@@ -53,6 +46,5 @@ func BiggerIsGreater(word string) string {
 		}
 	}
 
-	fmt.Printf("final runes = %+v\n", runes)
 	return string(runes)
 }
