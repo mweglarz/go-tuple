@@ -27,6 +27,10 @@ func (s *Stack) pop() (rune, bool) {
 	return last, true
 }
 
+func (s *Stack) isEmpty() bool {
+	return len(s.array) == 0
+}
+
 func contains(runes []rune, char rune) (bool, int) {
 	for indx, aRune := range runes {
 		if char == aRune {
@@ -56,16 +60,16 @@ func checkLine(line string) bool {
 			}
 		}
 	}
-	return true
+	return stack.isEmpty()
 }
 
 func checkBrackets(lines []string) {
 	for _, line := range lines {
 		result := checkLine(line)
 		if result {
-			fmt.Println("YES")
+			fmt.Println("YES", "\tline", line)
 		} else {
-			fmt.Println("NO")
+			fmt.Println("NO", "\tline", line)
 		}
 	}
 }
