@@ -62,9 +62,10 @@ func MaxQueenDistance(queenPos Pos, obstacles []Pos) int {
 					queenDiagSW = &pos
 					continue
 				}
+			}
 
 			if pos.x > queenPos.x {
-				if queenDiagNE.x != nil {
+				if queenDiagNE != nil {
 					if pos.x < queenDiagNE.x {
 						queenDiagNE = &pos
 					}
@@ -89,9 +90,10 @@ func MaxQueenDistance(queenPos Pos, obstacles []Pos) int {
 					queenDiagNW = &pos
 					continue
 				}
+			}
 
 			if pos.x > queenPos.x {
-				if queenDiagSE.x != nil {
+				if queenDiagSE != nil {
 					if pos.x < queenDiagSE.x {
 						queenDiagSE = &pos
 					}
@@ -108,6 +110,6 @@ func MaxQueenDistance(queenPos Pos, obstacles []Pos) int {
 	return 0
 }
 
-func dist(pos1, pos2 Pos) int {
+func distance(pos1, pos2 Pos) int {
 	return 0
 }
