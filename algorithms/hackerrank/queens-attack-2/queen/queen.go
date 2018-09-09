@@ -5,7 +5,14 @@ type Pos struct {
 	y int
 }
 
-func MaxQueenDistance(queenPos Pos, obstacles []Pos) int {
+func QueenMaxDistance(queenPos Pos, obstacles []Pos, size int) int {
+	optimizedObstacles := OptimizeObstacles(queenPos, obstacles, size)
+	_ = optimizedObstacles
+
+	return 0
+}
+
+func OptimizeObstacles(queenPos Pos, obstacles []Pos, size int) []*Pos {
 
 	var (
 		queenColMin Pos  = queenPos
@@ -18,12 +25,8 @@ func MaxQueenDistance(queenPos Pos, obstacles []Pos) int {
 		queenDiagSE *Pos = nil
 	)
 
-	isDiagonal := func(pos Pos) bool {
-		return false
-	}
-	isSecDiagonal := func(pos Pos) bool {
-		return false
-	}
+	isDiagonal := isDiagonalGenerator(queenPos, size)
+	isSecDiagonal := isSecDiagonalGenerator(queenPos, size)
 
 	for _, pos := range obstacles {
 
@@ -107,7 +110,30 @@ func MaxQueenDistance(queenPos Pos, obstacles []Pos) int {
 		}
 	}
 
-	return 0
+	return []*Pos{
+		&queenColMin,
+		&queenColMax,
+		&queenRowMin,
+		&queenRowMax,
+		queenDiagSW,
+		queenDiagNW,
+		queenDiagNE,
+		queenDiagSE,
+	}
+}
+
+func isDiagonalGenerator(queenPos Pos, size int) func(Pos) bool {
+	// generate linear func
+	return func(pos Pos) bool {
+		return true
+	}
+}
+
+func isSecDiagonalGenerator(queenPos Pos, size int) func(Pos) bool {
+	// generate linear func
+	return func(pos Pos) bool {
+		return true
+	}
 }
 
 func distance(pos1, pos2 Pos) int {
