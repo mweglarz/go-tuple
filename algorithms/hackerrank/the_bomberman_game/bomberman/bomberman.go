@@ -17,7 +17,7 @@ const (
 
 var time int = 0
 var hashes map[string]int
-var period int32
+var period int
 
 type Pos struct {
 	X int `json:"x"`
@@ -51,6 +51,13 @@ func (self *Cell) Hash() (string, error) {
 	return string(bytes[:]), nil
 }
 
+func (self *Cell) GetChar() rune {
+	if self.State == EMPTY {
+		return '.'
+	}
+	return 79
+}
+
 func Hash(cells [][]Cell) string {
 	result := ""
 
@@ -67,6 +74,7 @@ func Detonate(cells [][]Cell) {
 	for i := 0; i < len(cells); i++ {
 		for j := 0; j < len(cells[i]); j++ {
 			cell := cells[i][j]
+			_ = cell
 			// TODO: to implement
 		}
 	}
@@ -79,14 +87,27 @@ func GetState(ch rune) BombState {
 	return EMPTY
 }
 
+func AsciiView(cells [][]Cell) []string {
+	var rows []string
+	for i := 0; i < len(cells); i++ {
+		rowArray := make([]rune, len(cells))
+		for j := 0; j < len(cells[i]); j++ {
+			cell := cells[i][j]
+			rowArray = append(rowArray, cell.GetChar())
+		}
+		rows = append(rows, string(rowArray))
+	}
+	return rows
+}
+
 func BomberMan(n int32, grid []string) []string {
 	cells := Transform(grid)
 	AdvanceToInitState(cells)
-	hashExist := func() {
+	hashExist := func() bool {
 		_, ok := hashes[Hash(cells)]
 		return ok
 	}
-	for !hashExist() {
+	simulate := func() {
 		time++
 		if time%2 == 1 {
 			Detonate(cells)
@@ -96,11 +117,19 @@ func BomberMan(n int32, grid []string) []string {
 				c.PlantBombIfEmpty()
 			})
 		}
+
+	}
+	for !hashExist() {
 		hashes[Hash(cells)] = time
+		simulate()
 	}
 	period = time - 3
+	simulatesTodo := int(n) % period
+	for i := 0; i < simulatesTodo; i++ {
+		simulate()
+	}
 
-	return nil
+	return AsciiView(cells)
 }
 
 func Transform(grid []string) [][]Cell {
@@ -127,9 +156,6 @@ func AdvanceToInitState(cells [][]Cell) {
 	})
 	time += 3
 	Detonate(cells)
-	hashes[Hash(cells)] = time
-
-	return cells
 }
 
 func ForEach(cells [][]Cell, action func(cell *Cell)) {
