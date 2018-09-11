@@ -73,9 +73,26 @@ func Hash(cells [][]Cell) string {
 func Detonate(cells [][]Cell) {
 	for i := 0; i < len(cells); i++ {
 		for j := 0; j < len(cells[i]); j++ {
-			cell := cells[i][j]
-			_ = cell
-			// TODO: to implement
+
+			if cells[i][j].State == EXPLODING {
+
+				if i != 0 && cells[i-1][j].State != EXPLODING {
+					cells[i-1][j].State = EMPTY
+				}
+
+				if i != len(cells)-1 && cells[i+1][j].State != EXPLODING {
+					cells[i+1][j].State = EMPTY
+				}
+
+				if j != 0 && cells[i][j-1].State != EXPLODING {
+					cells[i][j-1].State = EMPTY
+				}
+
+				if j != len(cells[i])-1 && cells[i][j+1].State != EXPLODING {
+					cells[i][j+1].State = EMPTY
+				}
+				cells[i][j].State = EMPTY
+			}
 		}
 	}
 }
