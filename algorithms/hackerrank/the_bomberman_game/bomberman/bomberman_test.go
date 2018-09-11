@@ -15,6 +15,8 @@ func TestTransform(t *testing.T) {
 
 	result := Transform(testGrid)
 	fmt.Println(result)
+	hash := Hash(result)
+	fmt.Println(hash)
 }
 
 func TestHashing(t *testing.T) {
