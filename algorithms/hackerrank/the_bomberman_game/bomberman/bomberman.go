@@ -1,10 +1,5 @@
 package bomberman
 
-import (
-	"crypto/md5"
-	"encoding/json"
-)
-
 type BombState uint8
 
 const (
@@ -15,60 +10,9 @@ const (
 	EMPTY
 )
 
-var time int = 0
-var hashes map[string]int
-var period int
-
-type Pos struct {
-	X int `json:"x"`
-	Y int `json:"y"`
-}
-
-type Cell struct {
-	Pos   `json:"pos"`
-	Value rune      `json:"value"`
-	State BombState `json:"bombTime"`
-}
-
-func (self *Cell) TimeProgress() {
-	if self.State != EMPTY {
-		self.State += 1
-	}
-}
-
-func (self *Cell) PlantBombIfEmpty() {
-	if self.State == EMPTY {
-		self.State = PLANTED
-	}
-}
-
-func (self *Cell) Hash() (string, error) {
-	jsonBytes, err := json.Marshal(self)
-	if err != nil {
-		return "", err
-	}
-	bytes := md5.Sum(jsonBytes)
-	return string(bytes[:]), nil
-}
-
-func (self *Cell) GetChar() rune {
-	if self.State == EMPTY {
-		return '.'
-	}
-	return 79
-}
-
-func Hash(cells [][]Cell) string {
-	result := ""
-
-	for i := 0; i < len(cells); i++ {
-		for j := 0; j < len(cells[i]); j++ {
-			cellHash, _ := cells[i][j].Hash()
-			result = result + cellHash
-		}
-	}
-	return result
-}
+var time int32 = 0
+var hashes map[string]int32 = make(map[string]int32)
+var period int32
 
 func Detonate(cells [][]Cell) {
 	for i := 0; i < len(cells); i++ {
@@ -77,55 +21,44 @@ func Detonate(cells [][]Cell) {
 			if cells[i][j].State == EXPLODING {
 
 				if i != 0 && cells[i-1][j].State != EXPLODING {
-					cells[i-1][j].State = EMPTY
+					cells[i-1][j].UpdateState(EMPTY)
 				}
 
 				if i != len(cells)-1 && cells[i+1][j].State != EXPLODING {
-					cells[i+1][j].State = EMPTY
+					cells[i+1][j].UpdateState(EMPTY)
 				}
 
 				if j != 0 && cells[i][j-1].State != EXPLODING {
-					cells[i][j-1].State = EMPTY
+					cells[i][j-1].UpdateState(EMPTY)
 				}
 
 				if j != len(cells[i])-1 && cells[i][j+1].State != EXPLODING {
-					cells[i][j+1].State = EMPTY
+					cells[i][j+1].UpdateState(EMPTY)
 				}
-				cells[i][j].State = EMPTY
+				cells[i][j].UpdateState(EMPTY)
 			}
 		}
 	}
 }
 
-func GetState(ch rune) BombState {
-	if ch == 79 {
-		return PLANTED
-	}
-	return EMPTY
-}
-
-func AsciiView(cells [][]Cell) []string {
-	var rows []string
-	for i := 0; i < len(cells); i++ {
-		rowArray := make([]rune, len(cells))
-		for j := 0; j < len(cells[i]); j++ {
-			cell := cells[i][j]
-			rowArray = append(rowArray, cell.GetChar())
-		}
-		rows = append(rows, string(rowArray))
-	}
-	return rows
-}
-
 func BomberMan(n int32, grid []string) []string {
 	cells := Transform(grid)
 	AdvanceToInitState(cells)
+	if n == time {
+		return AsciiView(cells)
+	}
+
 	hashExist := func() bool {
 		_, ok := hashes[Hash(cells)]
 		return ok
 	}
+
 	simulate := func() {
 		time++
+		ForEach(cells, func(c *Cell) {
+			c.TimeProgress()
+		})
+
 		if time%2 == 1 {
 			Detonate(cells)
 
@@ -136,31 +69,28 @@ func BomberMan(n int32, grid []string) []string {
 		}
 
 	}
+
 	for !hashExist() {
-		hashes[Hash(cells)] = time
+		// after detonating
+		if time%2 == 1 {
+			hashes[Hash(cells)] = time
+		}
 		simulate()
+		if n == time {
+			return AsciiView(cells)
+		}
+	}
+
+	if n == time {
+		return AsciiView(cells)
 	}
 	period = time - 3
-	simulatesTodo := int(n) % period
-	for i := 0; i < simulatesTodo; i++ {
+	simulatesTodo := n % period
+	for i := int32(0); i < simulatesTodo; i++ {
 		simulate()
 	}
 
 	return AsciiView(cells)
-}
-
-func Transform(grid []string) [][]Cell {
-	var cells [][]Cell
-	var cellRow []Cell
-	for row, line := range grid {
-		cellRow = nil
-		for col, ch := range line {
-			pos := Pos{col, row}
-			cellRow = append(cellRow, Cell{pos, ch, GetState(ch)})
-		}
-		cells = append(cells, cellRow)
-	}
-	return cells
 }
 
 func AdvanceToInitState(cells [][]Cell) {
