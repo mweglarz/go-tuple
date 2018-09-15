@@ -16,9 +16,9 @@ func bomberMan(n int32, grid []string) []string {
 }
 
 func main() {
-	// reader := bufio.NewReaderSize(os.Stdin, 1024*1024)
-	file, _ := os.Open("test_cases/12/input12.dat")
-	reader := bufio.NewReaderSize(file, 1024*1024)
+	reader := bufio.NewReaderSize(os.Stdin, 1024*1024)
+	// file, _ := os.Open("test_cases/13/input13.dat")
+	// reader := bufio.NewReaderSize(file, 1024*1024)
 
 	stdout := os.Stdout
 	// stdout, err := os.Create(os.Getenv("OUTPUT_PATH"))

@@ -17,6 +17,7 @@ func BomberMan(n int32, grid []string) []string {
 
 	hashLength := len(cells) * len(cells[0])
 	hash := make([]rune, hashLength)
+	period := n
 
 	simulate := func() {
 		hash = make([]rune, hashLength)
@@ -84,7 +85,8 @@ func BomberMan(n int32, grid []string) []string {
 				return AsciiView(cells)
 			}
 
-			if _, ok := hashes[string(hash)]; ok {
+			if lastTime, ok := hashes[string(hash)]; ok {
+				period = int32(time) - lastTime
 				break
 
 			} else if time%2 == 1 {
@@ -97,17 +99,13 @@ func BomberMan(n int32, grid []string) []string {
 	if n == time {
 		return AsciiView(cells)
 	}
-	// period := int32(3)
-	// if time > 3 {
-	period := time - 3
-	// }
 	var simulatesTodo int
 
 	if period == 0 {
 		simulatesTodo = 10e9
 
 	} else {
-		simulatesTodo = int(n) % int(period)
+		simulatesTodo = int(n-time) % int(period)
 	}
 
 	for i := 0; i < simulatesTodo; i++ {
