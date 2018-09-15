@@ -1,10 +1,5 @@
 package bomberman
 
-import (
-	"crypto/md5"
-	"encoding/json"
-)
-
 type BombState uint8
 
 const (
@@ -35,16 +30,6 @@ func (self *Cell) PlantBombIfEmpty() {
 	if self.State == EMPTY {
 		self.State = PLANTED
 	}
-}
-
-func (self *Cell) Hash(i, j int) (string, error) {
-	// FIXME: to fix
-	jsonBytes, err := json.Marshal(self)
-	if err != nil {
-		return "", err
-	}
-	bytes := md5.Sum(jsonBytes)
-	return string(bytes[:]), nil
 }
 
 func (self *Cell) GetChar() rune {
