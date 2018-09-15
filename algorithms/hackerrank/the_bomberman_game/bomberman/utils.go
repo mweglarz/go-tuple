@@ -5,11 +5,10 @@ import "fmt"
 func Transform(grid []string) [][]Cell {
 	var cells [][]Cell
 	var cellRow []Cell
-	for row, line := range grid {
+	for _, line := range grid {
 		cellRow = nil
-		for col, ch := range line {
-			pos := Pos{col, row}
-			cellRow = append(cellRow, Cell{pos, ch, GetState(ch)})
+		for _, ch := range line {
+			cellRow = append(cellRow, Cell{ch, GetState(ch)})
 		}
 		cells = append(cells, cellRow)
 	}
@@ -36,18 +35,7 @@ func AsciiView(cells [][]Cell) []string {
 	return rows
 }
 
-func Hash(cells [][]Cell) string {
-	result := ""
-
-	for i := 0; i < len(cells); i++ {
-		for j := 0; j < len(cells[i]); j++ {
-			cellHash, _ := cells[i][j].Hash()
-			result = result + cellHash
-		}
-	}
-	return result
-}
-
+// debug only
 func PrintState(cells [][]Cell) {
 	ascii := AsciiView(cells)
 	for _, line := range ascii {

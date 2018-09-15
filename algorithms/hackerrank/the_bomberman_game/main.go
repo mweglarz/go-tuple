@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"strconv"
+	_ "strconv"
 	"strings"
 	"tuple-mw.com/algorithms/hackerrank/the_bomberman_game/bomberman"
 )
@@ -16,7 +16,7 @@ func bomberMan(n int32, grid []string) []string {
 }
 
 func main() {
-	reader := bufio.NewReaderSize(os.Stdin, 1024*1024)
+	// reader := bufio.NewReaderSize(os.Stdin, 1024*1024)
 
 	stdout := os.Stdout
 	// stdout, err := os.Create(os.Getenv("OUTPUT_PATH"))
@@ -26,27 +26,36 @@ func main() {
 
 	writer := bufio.NewWriterSize(stdout, 1024*1024)
 
-	rcn := strings.Split(readLine(reader), " ")
+	// rcn := strings.Split(readLine(reader), " ")
 
-	rTemp, err := strconv.ParseInt(rcn[0], 10, 64)
-	checkError(err)
-	r := int32(rTemp)
+	// rTemp, err := strconv.ParseInt(rcn[0], 10, 64)
+	// checkError(err)
+	// r := int32(rTemp)
 
-	cTemp, err := strconv.ParseInt(rcn[1], 10, 64)
-	checkError(err)
-	c := int32(cTemp)
-	_ = c
+	// cTemp, err := strconv.ParseInt(rcn[1], 10, 64)
+	// checkError(err)
+	// c := int32(cTemp)
+	// _ = c
 
-	nTemp, err := strconv.ParseInt(rcn[2], 10, 64)
-	checkError(err)
-	n := int32(nTemp)
-
-	var grid []string
-
-	for i := 0; i < int(r); i++ {
-		gridItem := readLine(reader)
-		grid = append(grid, gridItem)
+	// nTemp, err := strconv.ParseInt(rcn[2], 10, 64)
+	// checkError(err)
+	// n := int32(nTemp)
+	n := int32(3)
+	grid := []string{
+		".......",
+		"...O...",
+		"....O..",
+		".......",
+		"OO.....",
+		"OO.....",
 	}
+
+	// var grid []string
+
+	// for i := 0; i < int(r); i++ {
+	// gridItem := readLine(reader)
+	// grid = append(grid, gridItem)
+	// }
 
 	result := bomberMan(n, grid)
 

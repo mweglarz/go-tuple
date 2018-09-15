@@ -39,33 +39,6 @@ func TestTransform(t *testing.T) {
 	// fmt.Println(hash)
 }
 
-// func TestHashing(t *testing.T) {
-// c1 := Cell{Pos{9, 1}, 'd', EMPTY}
-// c2 := Cell{Pos{9, 2}, 'd', EMPTY}
-
-// h1, _ := c1.Hash()
-// h2, _ := c2.Hash()
-// fmt.Println(h1)
-// fmt.Println(h2)
-// }
-
-func TestAdvanceToInitState(t *testing.T) {
-
-	initCells := Transform(testGrid)
-
-	AdvanceToInitState(initCells)
-	initGrid := AsciiView(initCells)
-
-	if equal, msg := compare(initGrid, initTestGrid); !equal {
-		t.Errorf(msg)
-	}
-}
-
-func TestDetonated(t *testing.T) {
-
-
-}
-
 func compare(grid []string, grid2 []string) (bool, string) {
 
 	if len(grid) != len(grid2) {

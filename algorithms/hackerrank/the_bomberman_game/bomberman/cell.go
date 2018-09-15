@@ -5,13 +5,17 @@ import (
 	"encoding/json"
 )
 
-type Pos struct {
-	X int `json:"x"`
-	Y int `json:"y"`
-}
+type BombState uint8
+
+const (
+	PLANTED BombState = iota
+	WAIT1
+	WAIT2
+	EXPLODING
+	EMPTY
+)
 
 type Cell struct {
-	Pos   `json:"pos"`
 	Value rune      `json:"value"`
 	State BombState `json:"bombTime"`
 }
@@ -33,7 +37,8 @@ func (self *Cell) PlantBombIfEmpty() {
 	}
 }
 
-func (self *Cell) Hash() (string, error) {
+func (self *Cell) Hash(i, j int) (string, error) {
+	// FIXME: to fix
 	jsonBytes, err := json.Marshal(self)
 	if err != nil {
 		return "", err
