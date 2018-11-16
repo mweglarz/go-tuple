@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"fmt"
 	"io"
-	"math"
 	"os"
 	"strconv"
 	"strings"
@@ -14,20 +13,13 @@ import (
 // Complete the organizingContainers function below.
 func organizingContainers(container [][]int32) string {
 
-	size := len(container)
-	m := M.Zeros(size, size)
-	for i := 0; i < size; i++ {
-		for j := 0; j < size; j++ {
-			m.Set(i, j, float64(container[i][j]))
-		}
-	}
+	isPossible := M.OrganizingContainers(container)
 
-	mDet := m.Det()
-	if math.Abs(mDet) > 10e-9 {
-		return "Impossible"
+	if isPossible {
+		return "Possible"
 
 	} else {
-		return "Possible"
+		return "Impossible"
 	}
 }
 
