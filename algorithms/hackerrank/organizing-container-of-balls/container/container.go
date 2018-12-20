@@ -4,24 +4,30 @@ func OrganizingContainers(container [][]int32) bool {
 
 	size := len(container)
 
-	// iterate containers
+	containerMap := make(map[int]int32)
+	typesMap := make(map[int]int32)
+
 	for i := 0; i < size; i++ {
-		// iterate types
+
 		for j := 0; j < size; j++ {
-			if i == j || container[i][j] == 0 {
-				continue
-			}
+			containerMap[i] = containerMap[i] + container[i][j]
+			typesMap[j] = typesMap[j] + container[i][j]
+		}
+	}
 
-			for l := j; l < size && container[i][j] != 0; l++ {
-				countSwapped := swap(container, i, j, l, i)
-				if l != j {
-					container[l][j] = container[l][j] + countSwapped
-				}
-			}
+	for _, count := range containerMap {
+		found := false
 
-			if container[i][j] != 0 {
-				return false
+		for ballType, ballCount := range typesMap {
+			if count == ballCount {
+				found = true
+				typesMap[ballType] = -1
+				break
 			}
+		}
+
+		if !found {
+			return false
 		}
 	}
 
