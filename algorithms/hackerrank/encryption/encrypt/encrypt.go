@@ -11,10 +11,9 @@ func Encrypt(s string) string {
 	l := math.Sqrt(float64(len(s)))
 
 	lowerBound := floor(l)
-	upperBound := ceil(l)
+	upperBound := floor(l)
 
-	rows := lowerBound
-	cols := upperBound
+	rows, cols := adjustBounds(lowerBound, upperBound, len(s))
 
 	chars := make([][]int32, rows)
 	for i := 0; i < rows; i++ {
@@ -54,11 +53,6 @@ func floor(c float64) int {
 	return int(c)
 }
 
-func ceil(c float64) int {
-
-	return int(c) + 1
-}
-
 func printChars(chars [][]int32) {
 
 	for _, row := range chars {
@@ -68,4 +62,25 @@ func printChars(chars [][]int32) {
 		fmt.Println()
 	}
 	fmt.Println()
+}
+
+func adjustBounds(lowerBound, upperBound int, len int) (int, int) {
+
+	fmt.Printf("adjustBounds start, lower = %d, upper = %d\n", lowerBound, upperBound)
+
+	if lowerBound*upperBound >= len {
+		return lowerBound, upperBound
+	}
+
+	for lowerBound*upperBound < len {
+
+		if upperBound-lowerBound == 1 {
+			lowerBound++
+
+		} else {
+			upperBound++
+		}
+	}
+
+	return lowerBound, upperBound
 }
