@@ -11,49 +11,42 @@ import (
 // Complete the commonChild function below.
 func commonChild(s1 string, s2 string) int32 {
 
-	chars1 := []rune(s1)
-	chars2 := []rune(s2)
-
-	getResult := func(index1, index2 int) int32 {
-		result := 0
-		for index1 < len(chars1) && index2 < len(chars2) {
-			ch2 := chars2[index2]
-
-			for i := index1; i < len(chars1); i++ {
-				ch1 := chars1[i]
-
-				if ch1 == ch2 {
-					result++
-					index1 = i + 1
-					break
-				}
-			}
-			index2++
-		}
-		return int32(result)
-	}
-
-	var results []int32
-
-	for i := 0; i < len(chars2); i++ {
-		results = append(results, getResult(0, i))
-	}
-
-	return max(results)
+	lcsMatrix := lcsLength(s1, s2)
+	return int32(lcsMatrix[len(s1)][len(s2)])
 }
 
-func max(ar []int32) int32 {
-	if len(ar) == 0 {
-		return 0
-	}
+func lcsLength(s1, s2 string) [][]int {
+	var matrix [][]int = repeating(len(s1)+1, len(s2)+1, 0)
+	for i, ch1 := range s1 {
+		for j, ch2 := range s2 {
+			if ch1 == ch2 {
+				matrix[i+1][j+1] = matrix[i][j] + 1
 
-	max := ar[0]
-	for i := 1; i < len(ar); i++ {
-		if ar[i] > max {
-			max = ar[i]
+			} else {
+				matrix[i+1][j+1] = max(matrix[i+1][j], matrix[i][j+1])
+			}
 		}
 	}
-	return max
+	return matrix
+}
+
+func repeating(n, m, value int) (matrix [][]int) {
+	for i := 0; i < n; i++ {
+		var row []int
+		for j := 0; j < m; j++ {
+			row = append(row, value)
+		}
+		matrix = append(matrix, row)
+	}
+	return
+}
+
+func max(a, b int) (val int) {
+	val = a
+	if b > a {
+		val = b
+	}
+	return
 }
 
 func main() {
